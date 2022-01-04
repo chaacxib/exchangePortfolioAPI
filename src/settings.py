@@ -1,6 +1,5 @@
 import os
 
-
 # YAHOO FINANCE SETTINGS
 YH_FINANCE_API_HOST = 'yh-finance.p.rapidapi.com'
 YH_FINANCE_API_KEY = os.getenv(key='ON_CLOUD')
@@ -14,3 +13,8 @@ YH_FINANCE_API_HEADERS = {
 
 # DEVELOPMENT SETTINGS
 ON_CLOUD = bool(os.getenv(key='ON_CLOUD', default=False))
+
+# FASTAPI SETTINGS
+API_VERSION = '1.0.0'
+API_TITLE = 'Exchange Portfolio API'
+API_DESCRIPTION = 'Simple API for custom investing portfolio watch list'

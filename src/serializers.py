@@ -2,14 +2,22 @@ import uuid
 import requests
 
 from typing import Optional, List
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, Field, validator
 from settings import YH_FINANCE_API_SUMMARY_URL, YH_FINANCE_API_HEADERS
 
 
 class StockIn(BaseModel):
-    name: str
-    description: str
-    symbol: str
+    """Pydantic Model used to create an stock in the database
+
+    Raises:
+        ValueError: field limited to 50 characters
+        ValueError: field limited to 100 characters
+        ValueError: field limited to 10 characters
+        ValueError: symbol not listed in the New York stock exchange
+    """
+    name: str = Field(..., description='Human readable name of the stock company (Max 50 characters)')
+    description: str = Field(..., description='Brief description of the stock company (Max 100 characters)')
+    symbol: str = Field(..., description='Valid company symbol registered in the New York stock exchange (Max 10 characters)')
 
     @validator('name')
     def company_name_validator(cls, v):
@@ -41,15 +49,16 @@ class StockIn(BaseModel):
         return v
 
 
-class StockOut(BaseModel):
-    id: uuid.UUID
-    name: str
-    description: str
-    symbol: str
-    market_value: List[float]
+class StockOut(StockIn):
+    """Pydantic Model used to list an stock in the database
+    """
+    id: uuid.UUID = Field(..., description='Stock identifier. Default UUID4')
+    market_value: List[float] = Field(..., description='List of last 50 market values of the stock')
 
 
 class StockUpdate(BaseModel):
-    name: Optional[str] = None
-    description: Optional[str] = None
-    symbol: Optional[str] = None
+    """Pydantic Model used to update an stock in the database
+    """
+    name: Optional[str] = Field(None, description='Human readable name of the stock company (Max 50 characters)')
+    description: Optional[str] = Field(None, description='Brief description of the stock company (Max 100 characters)')
+    symbol: Optional[str] = Field(None, description='Valid company symbol registered in the New York stock exchange (Max 10 characters)')

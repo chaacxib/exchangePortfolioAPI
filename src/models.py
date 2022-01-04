@@ -16,8 +16,14 @@ class UUIDAttribute(UnicodeAttribute):
 
 
 class Stock(Model):
-    """
-    A DynamoDB User
+    """Stock Model on the database to store and manipulate the stocks generated on the API endpoints
+
+    Fields:
+        id (UUID): Stock identifier
+        name (str): Human readable name of the stock company
+        description (str): Brief description of the stock company
+        symbol (str): Valid company symbol registered in the New York stock exchange
+        market_value (List[float]): List of last 50 market values of the stock
     """
     class Meta:
         table_name = 'portfolio-stocks'
