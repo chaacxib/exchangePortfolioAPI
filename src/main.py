@@ -1,8 +1,8 @@
 import json
 # from mangum import Mangum
-from models import Stock
-from serializers import StockIn, StockOut, StockUpdate
-from utils import random_market_values, create_tables
+from src.models import Stock
+from src.serializers import StockIn, StockOut, StockUpdate
+from src.utils import random_market_values, create_tables
 
 from pydantic.error_wrappers import ValidationError
 from pynamodb.exceptions import DoesNotExist, DeleteError
@@ -11,7 +11,7 @@ from fastapi.openapi.utils import get_openapi
 from starlette.responses import RedirectResponse
 from fastapi import Depends, Response, FastAPI, HTTPException, status
 
-from settings import (
+from src.settings import (
     API_VERSION,
     API_TITLE,
     API_DESCRIPTION
@@ -91,6 +91,7 @@ async def update_stock(stock_data: StockUpdate, stock: str = Depends(get_stock))
 
     for k, v in patch_values.items():
         setattr(stock, k, v)
+    stock.save()
 
     return stock.attribute_values
 

@@ -1,5 +1,5 @@
 from faker import Faker
-from models import Stock
+from src.models import Stock
 
 
 def random_market_values(number=50):

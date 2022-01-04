@@ -1,8 +1,11 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # YAHOO FINANCE SETTINGS
 YH_FINANCE_API_HOST = 'yh-finance.p.rapidapi.com'
-YH_FINANCE_API_KEY = os.getenv(key='ON_CLOUD')
+YH_FINANCE_API_KEY = os.getenv(key='YH_FINANCE_API_KEY')
 
 YH_FINANCE_API_SUMMARY_URL = f'https://{YH_FINANCE_API_HOST}/stock/v2/get-summary'
 

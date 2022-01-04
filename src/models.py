@@ -1,6 +1,6 @@
 import uuid
 
-from settings import ON_CLOUD
+from src.settings import ON_CLOUD
 from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute, NumberSetAttribute
 

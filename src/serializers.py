@@ -3,7 +3,7 @@ import requests
 
 from typing import Optional, List
 from pydantic import BaseModel, Field, validator
-from settings import YH_FINANCE_API_SUMMARY_URL, YH_FINANCE_API_HEADERS
+from src.settings import YH_FINANCE_API_SUMMARY_URL, YH_FINANCE_API_HEADERS
 
 
 class StockIn(BaseModel):
