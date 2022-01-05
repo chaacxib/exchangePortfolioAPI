@@ -12,7 +12,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Start Database
-        run: docker-compose up -d dynamodb-local
+        run: |
+          touch .env
+          docker-compose up -d dynamodb-local
 
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
@@ -39,6 +41,5 @@ jobs:
       - name: Run Tests
         run: |
           pytest
-
-env:
-  YH_FINANCE_API_KEY: ${{ secrets.YH_FINANCE_API_KEY }}
+        env:
+          YH_FINANCE_API_KEY: ${{ secrets.YH_FINANCE_API_KEY }}
