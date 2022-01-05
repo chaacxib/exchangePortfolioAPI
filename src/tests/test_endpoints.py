@@ -14,16 +14,17 @@ VALIDATOR_ERRORS = [
 
 client = TestClient(app)
 
-def get_stocks_from_db():
-        stocks_data = Stock.scan()
-        stocks = [stock.attribute_values for stock in stocks_data]
-        return stocks
 
+def get_stocks_from_db():
+    stocks_data = Stock.scan()
+    stocks = [stock.attribute_values for stock in stocks_data]
+    return stocks
 
 
 def test_read_main():
     response = client.get("/")
     assert response.status_code == 200
+
 
 def test_create_stock(faker):
     # Field validators
@@ -62,7 +63,7 @@ def test_create_stock(faker):
     assert isinstance(data['detail'], list)
     assert len(data['detail']) == 1
 
-    assert  data['detail'][0]['msg'] == 'symbol not listed in the New York stock exchange'
+    assert data['detail'][0]['msg'] == 'symbol not listed in the New York stock exchange'
 
     # Successfull call
     response = client.post(
@@ -79,7 +80,7 @@ def test_create_stock(faker):
     assert StockOut.validate(data)
 
     assert Stock.get(data['id']).exists()
-    
+
 
 def test_get_stock_by_id():
     stock = get_stocks_from_db().pop(0)
@@ -88,19 +89,6 @@ def test_get_stock_by_id():
 
     assert response.status_code == 200
     assert StockOut.validate(data)
-
-
-def test_delete_stock_by_id():
-    stock = get_stocks_from_db().pop(0)
-    response = client.delete(url=f"/stock/{stock['id']}")
-
-    assert response.status_code == 200
-    assert response.text == 'Stock successfully deleted'
-
-    try:
-        assert not Stock.get(stock['id']).exists()
-    except Exception as error:
-        assert isinstance(error, DoesNotExist)
 
 
 def test_update_stock():
@@ -124,10 +112,23 @@ def test_update_stock():
 
 def test_get_stocks_list():
     stocks = get_stocks_from_db()
-    response = client.get(url=f"/stocks/")
+    response = client.get(url="/stocks/")
     data = response.json()
 
     assert response.status_code == 200
     assert isinstance(data, list)
     assert len(stocks) == len(data)
     assert all(StockOut.validate(stock) for stock in data)
+
+
+def test_delete_stock_by_id():
+    stock = get_stocks_from_db().pop(0)
+    response = client.delete(url=f"/stock/{stock['id']}")
+
+    assert response.status_code == 200
+    assert response.text == 'Stock successfully deleted'
+
+    try:
+        assert not Stock.get(stock['id']).exists()
+    except Exception as error:
+        assert isinstance(error, DoesNotExist)

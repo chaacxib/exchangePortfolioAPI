@@ -1,0 +1,54 @@
+name: Continuous Integration
+
+on:
+  push:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    services:
+      db:
+        image: amazon/dynamodb-local:latest
+        ports:
+        - 4567:8000
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # - name: Start Database
+      #   run: |
+      #     touch .env
+      #     docker-compose up -d dynamodb-local
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          python-version: 3.9.2
+
+      - name: Cache pip
+        uses: actions/cache@v1
+        with:
+          path: /opt/hostedtoolcache/Python/3.9.2/x64/
+          key: python-${{ hashFiles('requirements.txt') }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Python Linter
+        working-directory: src/
+        run: flake8
+
+      - name: Run Tests
+        run: |
+          pytest
+        env:
+          YH_FINANCE_API_KEY: ${{ secrets.YH_FINANCE_API_KEY }}
+          AWS_DEFAULT_REGION: 'us-east-1'
+          AWS_ACCESS_KEY_ID: 'local'
+          AWS_SECRET_ACCESS_KEY: 'local'
