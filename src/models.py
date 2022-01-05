@@ -1,8 +1,8 @@
 import uuid
 
-from src.settings import ON_CLOUD
 from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute, NumberSetAttribute
+from src.settings import ON_CLOUD, LOCAL_DATABASE_HOST
 
 
 # UUID  Attribute will use as Dynamo hash key
@@ -30,7 +30,7 @@ class Stock(Model):
         region = 'us-east-1'
 
         if not ON_CLOUD:
-            host = "http://localhost:4567"
+            host = LOCAL_DATABASE_HOST
 
     id = UUIDAttribute(hash_key=True, default=uuid.uuid4)
     name = UnicodeAttribute()

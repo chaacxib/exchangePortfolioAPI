@@ -1,12 +1,40 @@
 version: '3.8'
 
 services:
+  api:
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    container_name: api
+    ports:
+        - 8000:8000
+    env_file:
+        - ./.env
+    environment:
+      AWS_DEFAULT_REGION: 'us-east-1'
+      AWS_ACCESS_KEY_ID: 'local'
+      AWS_SECRET_ACCESS_KEY: 'local'
+      LOCAL_DATABASE_HOST: 'http://dynamodb-local:4567'
+    networks:
+        - exchange-portfolio-network
+    depends_on:
+        - dynamodb-local
+
   dynamodb-local:
-    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    command: "-jar DynamoDBLocal.jar -port 4567 -sharedDb -dbPath ./data"
     image: "amazon/dynamodb-local:latest"
     container_name: dynamodb-local
+    environment:
+      AWS_ACCESS_KEY_ID: 'local'
+      AWS_SECRET_ACCESS_KEY: 'local'
     ports:
-      - "4567:8000"
+      - "4567:4567"
     volumes:
       - "./docker-compose/dynamodb:/home/dynamodblocal/data"
     working_dir: /home/dynamodblocal
+    networks:
+        - exchange-portfolio-network
+
+networks:
+    exchange-portfolio-network:
+        name: exchange-portfolio-network

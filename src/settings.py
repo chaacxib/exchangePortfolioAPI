@@ -17,6 +17,7 @@ YH_FINANCE_API_HEADERS = {
 # DEVELOPMENT SETTINGS
 ON_CLOUD = bool(os.getenv(key='ON_CLOUD', default=False))
 STAGE_PREFIX = os.getenv(key='STAGE_PREFIX', default='')
+LOCAL_DATABASE_HOST = os.getenv(key='LOCAL_DATABASE_HOST', default="http://localhost:4567")
 
 # FASTAPI SETTINGS
 API_VERSION = '1.0.0'
