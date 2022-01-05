@@ -46,4 +46,4 @@ jobs:
           AWS_DEFAULT_REGION: 'us-east-1'
           AWS_ACCESS_KEY_ID: 'local'
           AWS_SECRET_ACCESS_KEY: 'local'
-          LOCAL_DATABASE_HOST: 'http://dynamodb-local:4567'
+          LOCAL_DATABASE_HOST: 'http://0.0.0.0:4567'
