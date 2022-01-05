@@ -43,3 +43,6 @@ jobs:
           pytest
         env:
           YH_FINANCE_API_KEY: ${{ secrets.YH_FINANCE_API_KEY }}
+          AWS_DEFAULT_REGION: 'us-east-1'
+          AWS_ACCESS_KEY_ID: 'local'
+          AWS_SECRET_ACCESS_KEY: 'local'
