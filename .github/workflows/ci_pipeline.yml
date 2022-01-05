@@ -7,14 +7,20 @@ jobs:
   check:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-        
+
+    services:
+      db:
+        image: amazon/dynamodb-local:latest
+        ports:
+        - 4567:8000
+
     steps:
       - uses: actions/checkout@v2
 
-      - name: Start Database
-        run: |
-          touch .env
-          docker-compose up -d dynamodb-local
+      # - name: Start Database
+      #   run: |
+      #     touch .env
+      #     docker-compose up -d dynamodb-local
 
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
@@ -46,4 +52,3 @@ jobs:
           AWS_DEFAULT_REGION: 'us-east-1'
           AWS_ACCESS_KEY_ID: 'local'
           AWS_SECRET_ACCESS_KEY: 'local'
-          LOCAL_DATABASE_HOST: 'http://0.0.0.0:4567'
