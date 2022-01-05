@@ -91,19 +91,6 @@ def test_get_stock_by_id():
     assert StockOut.validate(data)
 
 
-def test_delete_stock_by_id():
-    stock = get_stocks_from_db().pop(0)
-    response = client.delete(url=f"/stock/{stock['id']}")
-
-    assert response.status_code == 200
-    assert response.text == 'Stock successfully deleted'
-
-    try:
-        assert not Stock.get(stock['id']).exists()
-    except Exception as error:
-        assert isinstance(error, DoesNotExist)
-
-
 def test_update_stock():
     stock = get_stocks_from_db().pop(0)
     response = client.patch(
@@ -132,3 +119,16 @@ def test_get_stocks_list():
     assert isinstance(data, list)
     assert len(stocks) == len(data)
     assert all(StockOut.validate(stock) for stock in data)
+
+
+def test_delete_stock_by_id():
+    stock = get_stocks_from_db().pop(0)
+    response = client.delete(url=f"/stock/{stock['id']}")
+
+    assert response.status_code == 200
+    assert response.text == 'Stock successfully deleted'
+
+    try:
+        assert not Stock.get(stock['id']).exists()
+    except Exception as error:
+        assert isinstance(error, DoesNotExist)
