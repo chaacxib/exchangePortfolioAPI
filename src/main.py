@@ -1,5 +1,6 @@
 import json
-# from mangum import Mangum
+
+from mangum import Mangum
 from src.models import Stock
 from src.serializers import StockIn, StockOut, StockUpdate
 from src.utils import random_market_values, create_tables
@@ -14,7 +15,9 @@ from fastapi import Depends, Response, FastAPI, HTTPException, status
 from src.settings import (
     API_VERSION,
     API_TITLE,
-    API_DESCRIPTION
+    API_DESCRIPTION,
+    ON_CLOUD,
+    STAGE_PREFIX
 )
 
 app = FastAPI()
@@ -22,7 +25,8 @@ app = FastAPI()
 
 @app.get("/")
 async def root():
-    response = RedirectResponse(url='/docs')
+    docs_url = f'{STAGE_PREFIX}docs' if ON_CLOUD and STAGE_PREFIX else '/docs'
+    response = RedirectResponse(url=docs_url)
     return response
 
 
@@ -153,10 +157,18 @@ def custom_openapi():
     openapi_schema["info"]["x-logo"] = {
         "url": "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"
     }
+
+    if ON_CLOUD and STAGE_PREFIX:
+        openapi_schema["servers"] = [{"url": STAGE_PREFIX}]
     app.openapi_schema = openapi_schema
     return app.openapi_schema
 
 
 app.openapi = custom_openapi
+
+if ON_CLOUD and STAGE_PREFIX:
+    app.root_path = '/default/'
+    app.root_path_in_servers = True
+
 create_tables()
-# handler = Mangum(app)
+handler = Mangum(app)
